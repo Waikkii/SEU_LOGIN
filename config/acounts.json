@@ -1,8 +1,15 @@
 {
+    "Total_Bark_Key": "Your Bark Key (If not, leave it blank)",
     "Users": [
         {
-            "id": "your id",
-            "pwd": "your passwd"
+            "id": "user1 id",
+            "pwd": "user1 passwd"，
+            "barkkey": "user1 Bark Key (If not, leave it blank)"
+        },
+        {
+            "id": "user2 id",
+            "pwd": "user2 passwd"，
+            "barkkey": "user2 Bark Key (If not, leave it blank)"
         }
     ]
 }
