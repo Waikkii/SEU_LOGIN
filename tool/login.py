@@ -29,5 +29,5 @@ def login(url, id, pwd):
         logger.info(name + "Login Success!")
     except Exception:
         logger.info("Login Fail!")
-        return False
-    return ss, res
+        return False, ss, res_test
+    return True, ss, res
