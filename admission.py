@@ -413,6 +413,7 @@ if __name__ == '__main__':
         else:
             logger.info("SEU登录失败")
             msg_all += "SEU登录失败"+"\n"
+            msg_all_total += msg_all
         if user["barkkey"]!="":
             bark_post('入校', msg_all, user["barkkey"])
         ss.close()
