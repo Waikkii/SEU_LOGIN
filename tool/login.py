@@ -3,6 +3,9 @@ import requests
 import json
 from tool.encrypt import encryptAES
 from bs4 import BeautifulSoup
+import logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
 
 def login(url, id, pwd):
     ss = requests.Session()
@@ -17,13 +20,14 @@ def login(url, id, pwd):
             form[k['id']] = k['value']
     form['password'] = encryptAES(pwd, form['pwdDefaultEncryptSalt'])
     res = ss.post(url, data=form)
+    res.encoding = 'utf-8'
     ss.get('http://ehall.seu.edu.cn/login?service=http://ehall.seu.edu.cn/new/index.html')
-    res = ss.get('http://ehall.seu.edu.cn/jsonp/userDesktopInfo.json')
-    json_res = json.loads(res.text)
+    res_test = ss.get('http://ehall.seu.edu.cn/jsonp/userDesktopInfo.json')
+    json_res_test = json.loads(res_test.text)
     try:
-        name = json_res["userName"]
-        print(name, "Login Success!")
+        name = json_res_test["userName"]
+        logger.info(name + "Login Success!")
     except Exception:
-        print("Login Fail!")
+        logger.info("Login Fail!")
         return False
-    return ss
+    return ss, res
