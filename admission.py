@@ -406,10 +406,15 @@ if __name__ == '__main__':
         msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
         ss, user_info = login(url, user["id"], user["pwd"])
         if ss:
+            logger.info("SEU登录成功")
+            msg_all += "SEU登录成功"+"\n"
             askForAdimission(ss, user["id"], user_info)
             msg_all_total += msg_all
-            if user["barkkey"]!="":
-                bark_post('入校', msg_all, user["barkkey"])
-            ss.close()
+        else:
+            logger.info("SEU登录失败")
+            msg_all += "SEU登录失败"+"\n"
+        if user["barkkey"]!="":
+            bark_post('入校', msg_all, user["barkkey"])
+        ss.close()
     if Total_Bark_Key!="":
         bark_post('入校ALL', msg_all_total, Total_Bark_Key)
