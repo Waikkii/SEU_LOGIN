@@ -1,4 +1,4 @@
-name: SEU Auto Leave
+name: SEU Auto Admission
 on:
   schedule:
     - cron: '05 22 * * *'
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Leave:
+  Admission:
     runs-on: ubuntu-18.04
     if: github.event.repository.owner.id == github.event.sender.id
     
