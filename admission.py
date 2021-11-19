@@ -404,8 +404,8 @@ if __name__ == '__main__':
         msg_all = ""
         logger.info("------------开始【"+user["id"]+"】------------")
         msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
-        ss, user_info = login(url, user["id"], user["pwd"])
-        if ss:
+        is_login, ss, user_info = login(url, user["id"], user["pwd"])
+        if is_login:
             logger.info("SEU登录成功")
             msg_all += "SEU登录成功"+"\n"
             askForAdimission(ss, user["id"], user_info)
