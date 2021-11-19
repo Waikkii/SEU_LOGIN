@@ -1,4 +1,5 @@
 import re
+import os
 import json
 import time
 import requests
@@ -10,9 +11,12 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 with open("./config/acounts.json", "r", encoding="utf-8") as f:
-    configs = json.loads(f.read())
-    Total_Bark_Key = configs['Total_Bark_Key']
-    user_configs_list = configs['Users']
+    acounts = json.loads(f.read())
+
+if "ACOUNTS" in os.environ:
+    acounts = os.environ["ACOUNTS"]
+Total_Bark_Key = acounts['Total_Bark_Key']
+user_acounts_list = acounts['Users']
 
 headers = dict()
 headers['Referer'] =  'http://ehall.seu.edu.cn/qljfwapp3/sys/lwWiseduElectronicPass/index.do'
@@ -396,7 +400,7 @@ if __name__ == '__main__':
     logger.info("\n===入校===\n")
     msg_all_total += "\n===入校===\n"+"\n"
     url = "https://newids.seu.edu.cn/authserver/login?service=http%3A%2F%2Fehall.seu.edu.cn%2Fqljfwapp3%2Fsys%2FlwWiseduElectronicPass%2Findex.do"
-    for user in user_configs_list:
+    for user in user_acounts_list:
         msg_all = ""
         logger.info("------------开始【"+user["id"]+"】------------")
         msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
