@@ -20,7 +20,7 @@ jobs:
     - name: Run
       env:
         TZ: Asia/Shanghai
-        acounts: ${{ secrets.acounts }}
+        acounts: ${{ secrets.ACOUNTS }}
       run: |
         pip3 install -r requirements.txt
         python3 admission.py
