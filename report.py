@@ -13,10 +13,17 @@ logger = logging.getLogger(__name__)
 with open("./config/acounts.json", "r", encoding="utf-8") as f:
     acounts = json.loads(f.read())
 
+with open("./config/report.json", "r", encoding="utf-8") as f:
+    report_val = json.loads(f.read())
+
 if "ACOUNTS" in os.environ:
     acounts = os.environ["ACOUNTS"]
+if "REPORT" in os.environ:
+    report_val = os.environ["REPORT"]
+
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
+user_report_list = report_val['Users']
 
 headers = dict()
 
@@ -121,21 +128,22 @@ if __name__ == '__main__':
     msg_all_total += "\n===上报===\n"+"\n"
     url = "https://newids.seu.edu.cn/authserver/login?service=http%3A%2F%2Fehall.seu.edu.cn%2Fqljfwapp3%2Fsys%2FlwWiseduElectronicPass%2Findex.do"
     for user in user_acounts_list:
-        msg_all = ""
-        logger.info("------------开始【"+user["id"]+"】------------")
-        msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
-        is_login, ss, user_info = login(url, user["id"], user["pwd"])
-        if is_login:
-            logger.info("SEU登录成功")
-            msg_all += "SEU登录成功"+"\n"
-            report(ss)
-            msg_all_total += msg_all
-        else:
-            logger.info("SEU登录失败")
-            msg_all += "SEU登录失败"+"\n"
-            msg_all_total += msg_all
-        if user["barkkey"]!="":
-            bark_post('上报', msg_all, user["barkkey"])
-        ss.close()
+        if user["id"] in user_report_list:
+            msg_all = ""
+            logger.info("------------开始【"+user["id"]+"】------------")
+            msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
+            is_login, ss, user_info = login(url, user["id"], user["pwd"])
+            if is_login:
+                logger.info("SEU登录成功")
+                msg_all += "SEU登录成功"+"\n"
+                report(ss)
+                msg_all_total += msg_all
+            else:
+                logger.info("SEU登录失败")
+                msg_all += "SEU登录失败"+"\n"
+                msg_all_total += msg_all
+            if user["barkkey"]!="":
+                bark_post('上报', msg_all, user["barkkey"])
+            ss.close()
     if Total_Bark_Key!="":
         bark_post('上报ALL', msg_all_total, Total_Bark_Key)
