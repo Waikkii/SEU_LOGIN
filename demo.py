@@ -10,6 +10,6 @@ def Customized_Scripts(session):
 if __name__ == '__main__':
     url = "https://newids.seu.edu.cn/authserver/login?goto=http://my.seu.edu.cn/index.portal"
     for user in userconfigs_list:
-        ss = login(url, user["id"], user["pwd"])
-        if ss:
+        is_login, ss, user_info = login(url, user["id"], user["pwd"])
+        if is_login:
             Customized_Scripts(ss)
