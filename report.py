@@ -144,6 +144,8 @@ if __name__ == '__main__':
                 msg_all_total += msg_all
             if user["barkkey"]!="":
                 bark_post('上报', msg_all, user["barkkey"])
+                logger.info(user["barkkey"]+"个人推送成功")
             ss.close()
     if Total_Bark_Key!="":
         bark_post('上报ALL', msg_all_total, Total_Bark_Key)
+        logger.info(Total_Bark_Key+"管理员推送成功")
