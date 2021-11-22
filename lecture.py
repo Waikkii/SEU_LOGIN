@@ -2,9 +2,7 @@ import re
 import os
 import json
 import time
-import gevent
-from gevent import monkey#打补丁（把下面有可能有IO操作的单独做上标记）
-monkey.patch_all()
+import threading
 import requests
 from urllib import parse
 from tool.login import login
@@ -30,7 +28,6 @@ user_lecture_list = lecture_val['Users']
 headers = dict()
 
 def sbsplit(str):
-    #考虑
     #，
     #,
     #,空格
@@ -48,20 +45,23 @@ def sbsplit(str):
     else:
         return [str]
 
-def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey):
-    global msg_all
-
+def lecture(session, whitelist, blacklist, location, msg_all):
     if whitelist!="":
         logger.info("指定白名单过滤："+str(sbsplit(whitelist)))
+        msg_all += "指定白名单过滤："+"\n"
     elif blacklist!="":
         logger.info("未找到指定白名单，开启黑名单过滤模式："+str(sbsplit(blacklist)))
+        msg_all += "未找到指定白名单，开启黑名单过滤模式："+str(sbsplit(blacklist))+"\n"
     else:
         logger.info("未找到指定白名单和黑名单，不进行过滤")
+        msg_all += "未找到指定白名单和黑名单，不进行过滤"+"\n"
 
     if location!="":
         logger.info("指定地点为"+str(sbsplit(location)))
+        msg_all += "指定地点为"+str(sbsplit(location))+"\n"
     else:
         logger.info("未找到指定地点，不进行过滤")
+        msg_all += "未找到指定地点，不进行过滤"+"\n"
 
     continued = True
     counter = 0
@@ -78,9 +78,9 @@ def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey
         result = session.post(url, data = json_data, verify = False)
         counter = counter + 1
         if counter>=2:
-            bark_temp_url = 'https://api.day.app/' + master_barkkey + '/' + '讲座' + '/' + id + '已超过最大运行次数，未抢到讲座'
-            requests.get(bark_temp_url)
-            continued = False
+            logger.info("已超过最大运行次数，未抢到讲座")
+            msg_all += "已超过最大运行次数，未抢到讲座"+"\n"
+            break
         logger.info(f'第{counter}次循环。')
         time.sleep(0.5)
         try:
@@ -110,6 +110,7 @@ def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey
 
                 if counter==1 and choose_flag and location_flag and time_flag:
                     logger.info("可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD']))
+                    msg_all += "可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
                     
                 
                 if choose_flag and location_flag and time_flag and (lecture_signal != '0'):
@@ -118,25 +119,22 @@ def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey
                     result = session.get(url, verify = False)
                     success = json.loads(result.content.decode())['success']
                     if success == True:
-                        logger.info(id + "讲座预订成功！讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD']))
-                        if master_barkkey!="":
-                            bark_post(item, id, master_barkkey)
-                        if barkkey!="":
-                            bark_post(item, id, barkkey)
+                        msg_all += '讲座预订成功，信息如下：\n' + \
+                            f'讲座名称：{item["JZMC"]}\n' + \
+                            f'讲座时间：{item["JZSJ"]}\n' + \
+                            f'讲座地点：{item["JZDD"]}\n' + \
+                            f'主讲人：{item["ZJR"]}'
                         continued = False
                         break
         except Exception as e:
             logger.info(e)
+            msg_all += e
             pass
 
-def bark_post(item, id, Sckey):
-    mail_title = '讲座'
-    mail_content = id + '讲座预订成功，信息如下：\n' + \
-        f'讲座名称：{item["JZMC"]}\n' + \
-        f'讲座时间：{item["JZSJ"]}\n' + \
-        f'讲座地点：{item["JZDD"]}\n' + \
-        f'主讲人：{item["ZJR"]}'
-    url = 'https://api.day.app/' + Sckey + '/' + mail_title + '/' + mail_content
+    return msg_all
+
+def bark_post(Subject, Message, Sckey):
+    url = 'https://api.day.app/' + Sckey + '/' + Subject + '/' + Message
     r = requests.get(url)
 
 def gevent_do(user):
@@ -151,11 +149,13 @@ def gevent_do(user):
     if is_login:
         logger.info("SEU登录成功")
         msg_all += "SEU登录成功"+"\n"
-        lecture(ss, user["id"], user["whitelist"], user["blacklist"], user["location"], Total_Bark_Key, barkkey)
+        msg_out = lecture(ss, user["whitelist"], user["blacklist"], user["location"], msg_all)
+        bark_post('讲座', msg_out, Total_Bark_Key)
+        bark_post('讲座', msg_out, barkkey)
     else:
         logger.info("SEU登录失败")
         msg_all += "SEU登录失败"+"\n"
-    if barkkey!="":
+        bark_post('讲座', msg_all, Total_Bark_Key)
         bark_post('讲座', msg_all, barkkey)
     ss.close()
 
@@ -164,8 +164,14 @@ if __name__ == '__main__':
     logger.info("\n===讲座===\n")
     msg_all += "\n===讲座===\n"+"\n"
     url = "https://newids.seu.edu.cn/authserver/login?goto=http://my.seu.edu.cn/index.portal"
-    gevent_queue = []
+    threads = []
     for user in user_lecture_list:
-        gevent_queue.append(gevent.spawn(gevent_do, user))
-    logger.info(f'开启{len(gevent_queue)}线程>>>>>>')
-    gevent.joinall(gevent_queue)
+        threads.append(threading.Thread(target=gevent_do, args=(user,)))
+    logger.info(f'开启{len(threads)}线程>>>>>>')
+    
+    for t in threads:
+        t.setDaemon(True)
+        t.start()
+
+    for t in threads:
+        t.join()
