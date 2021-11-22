@@ -19,11 +19,11 @@ with open("./config/admission.json", "r", encoding="utf-8") as f:
 if "ACOUNTS" in os.environ:
     acounts = os.environ["ACOUNTS"]
 if "ADMISSION" in os.environ:
-    admission = os.environ["ADMISSION"]
+    admission_val = os.environ["ADMISSION"]
 
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
-user_admmsion_list = admission['Users']
+user_admission_list = admission_val['Users']
 
 headers = dict()
 headers['Referer'] =  'http://ehall.seu.edu.cn/qljfwapp3/sys/lwWiseduElectronicPass/index.do'
@@ -133,7 +133,7 @@ def deleteInstance(sess, datas):
                 (sess.post(url2, data=parse.urlencode(post_info), headers=headers).text)
 
 
-def askForAdimission(sess, id, user_info):
+def admission(sess, id, user_info):
     global msg_all
     sess.get(cookie_url)
     cookie = requests.utils.dict_from_cookiejar(sess.cookies)
@@ -408,7 +408,7 @@ if __name__ == '__main__':
     msg_all_total += "\n===入校===\n"+"\n"
     url = "https://newids.seu.edu.cn/authserver/login?service=http%3A%2F%2Fehall.seu.edu.cn%2Fqljfwapp3%2Fsys%2FlwWiseduElectronicPass%2Findex.do"
     for user in user_acounts_list:
-        if user["id"] in user_admmsion_list:
+        if admission_val['ALL'] or user["id"] in user_admission_list:
             msg_all = ""
             logger.info("------------开始【"+user["id"]+"】------------")
             msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
@@ -416,7 +416,7 @@ if __name__ == '__main__':
             if is_login:
                 logger.info("SEU登录成功")
                 msg_all += "SEU登录成功"+"\n"
-                askForAdimission(ss, user["id"], user_info)
+                admission(ss, user["id"], user_info)
                 msg_all_total += msg_all
             else:
                 logger.info("SEU登录失败")
