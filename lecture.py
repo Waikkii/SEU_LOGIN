@@ -113,7 +113,7 @@ def lecture(session, whitelist, blacklist, location, msg_all):
                     msg_all += "可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
                     
                 
-                if choose_flag and location_flag and time_flag and (lecture_signal != '0'):
+                if choose_flag and location_flag and time_flag:
                     wid = item['WID']
                     url = f'http://ehall.seu.edu.cn/gsapp/sys/jzxxtjapp/hdyy/yySave.do?paramJson=%7B%22HD_WID%22%3A%22{wid}%22%7D'
                     result = session.get(url, verify = False)
