@@ -151,7 +151,7 @@ def gevent_do(user):
     if is_login:
         logger.info("SEU登录成功")
         msg_all += "SEU登录成功"+"\n"
-        lecture(ss, user["id"], useruser["whitelist"], user["blacklist"], user["location"], Total_Bark_Key, barkkey)
+        lecture(ss, user["id"], user["whitelist"], user["blacklist"], user["location"], Total_Bark_Key, barkkey)
     else:
         logger.info("SEU登录失败")
         msg_all += "SEU登录失败"+"\n"
