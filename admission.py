@@ -16,7 +16,7 @@ with open("./config/acounts.json", "r", encoding="utf-8") as f:
     acounts = json.loads(f.read())
 
 with open("./config/admission.json", "r", encoding="utf-8") as f:
-    admission = json.loads(f.read())
+    admission_val = json.loads(f.read())
 
 if "ACOUNTS" in os.environ:
     acounts = os.environ["ACOUNTS"]
