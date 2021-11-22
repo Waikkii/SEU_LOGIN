@@ -6,6 +6,8 @@ import random
 import requests
 from urllib import parse
 from tool.login import login
+import time
+from time import sleep
 import logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
@@ -146,6 +148,9 @@ if __name__ == '__main__':
                 bark_post('上报', msg_all, user["barkkey"])
                 logger.info(user["barkkey"]+"个人推送成功")
             ss.close()
+            logger.info("模拟等待10s......")
+            sleep(10)
+            
     if Total_Bark_Key!="":
         bark_post('上报ALL', msg_all_total, Total_Bark_Key)
         logger.info(Total_Bark_Key+"管理员推送成功")
