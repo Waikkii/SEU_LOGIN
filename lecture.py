@@ -48,7 +48,7 @@ def sbsplit(str):
     else:
         return [str]
 
-def lecture(session, whitelist, blacklist, location, master_barkkey, barkkey):
+def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey):
     global msg_all
 
     if whitelist!="":
@@ -78,7 +78,7 @@ def lecture(session, whitelist, blacklist, location, master_barkkey, barkkey):
         result = session.post(url, data = json_data, verify = False)
         counter = counter + 1
         if counter>=2:
-            bark_temp_url = 'https://api.day.app/' + 'Sckey' + '/' + '讲座' + '/' + '已超过最大运行次数，未抢到讲座'
+            bark_temp_url = 'https://api.day.app/' + master_barkkey + '/' + '讲座' + '/' + id + '已超过最大运行次数，未抢到讲座'
             requests.get(bark_temp_url)
         logger.info(f'第{counter}次循环。')
         time.sleep(0.5)
@@ -118,18 +118,18 @@ def lecture(session, whitelist, blacklist, location, master_barkkey, barkkey):
                     success = json.loads(result.content.decode())['success']
                     if success == True:
                         if master_barkkey!="":
-                            bark_post(item, master_barkkey)
+                            bark_post(item, id, master_barkkey)
                         if barkkey!="":
-                            bark_post(item, barkkey)
+                            bark_post(item, id, barkkey)
                         continued = False
                         break
         except Exception as e:
             logger.info(e)
             pass
 
-def bark_post(item, Sckey):
+def bark_post(item, id, Sckey):
     mail_title = '讲座'
-    mail_content = '讲座预订成功，信息如下：\n' + \
+    mail_content = id + '讲座预订成功，信息如下：\n' + \
         f'讲座名称：{item["JZMC"]}\n' + \
         f'讲座时间：{item["JZSJ"]}\n' + \
         f'讲座地点：{item["JZDD"]}\n' + \
@@ -149,7 +149,7 @@ def gevent_do(user):
     if is_login:
         logger.info("SEU登录成功")
         msg_all += "SEU登录成功"+"\n"
-        lecture(ss, user["whitelist"], user["blacklist"], user["location"], Total_Bark_Key, barkkey)
+        lecture(ss, user["id"], useruser["whitelist"], user["blacklist"], user["location"], Total_Bark_Key, barkkey)
     else:
         logger.info("SEU登录失败")
         msg_all += "SEU登录失败"+"\n"
