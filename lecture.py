@@ -80,6 +80,7 @@ def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey
         if counter>=2:
             bark_temp_url = 'https://api.day.app/' + master_barkkey + '/' + '讲座' + '/' + id + '已超过最大运行次数，未抢到讲座'
             requests.get(bark_temp_url)
+            continued = False
         logger.info(f'第{counter}次循环。')
         time.sleep(0.5)
         try:
@@ -117,6 +118,7 @@ def lecture(session, id, whitelist, blacklist, location, master_barkkey, barkkey
                     result = session.get(url, verify = False)
                     success = json.loads(result.content.decode())['success']
                     if success == True:
+                        logger.info(id + "讲座预订成功！讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD']))
                         if master_barkkey!="":
                             bark_post(item, id, master_barkkey)
                         if barkkey!="":
