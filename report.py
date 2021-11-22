@@ -128,7 +128,7 @@ if __name__ == '__main__':
     msg_all_total += "\n===上报===\n"+"\n"
     url = "https://newids.seu.edu.cn/authserver/login?service=http%3A%2F%2Fehall.seu.edu.cn%2Fqljfwapp3%2Fsys%2FlwWiseduElectronicPass%2Findex.do"
     for user in user_acounts_list:
-        if user["id"] in user_report_list:
+        if report_val['ALL'] or user["id"] in user_report_list:
             msg_all = ""
             logger.info("------------开始【"+user["id"]+"】------------")
             msg_all += "------------开始【"+user["id"]+"】------------"+"\n"
