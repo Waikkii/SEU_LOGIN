@@ -1,5 +1,9 @@
 # SEU自动化框架
 
+## Special thanks to:
+* [@quzard](https://github.com/quzard)
+* [@luzy99](https://github.com/luzy99)
+
 ## To Do List
 - [x] 入校申请
 - [x] 请假申请
