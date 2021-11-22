@@ -1,3 +1,4 @@
 {
+    "ALL": false,
     "Users": ["user1 id", "user2 id"]
 }
