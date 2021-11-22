@@ -6,15 +6,18 @@
 SEU_LOGIN
 ├── config(存放配置信息，除acounts.json之外均与每个脚本对应)
 │   ├── acounts.json(用户名、密码和用于推送的Barkkey)
-│   ├── scripts1.json
-│   └── scripts2.json
+│   ├── admission.json
+│   ├── leave.json
+│   └── report.json
 ├── tool(用于登录的工具)
 │   ├── encrypt.js
 │   ├── encrypt.py
+│   ├── encrypt_bak.py(给没法装js2py的小伙伴，需要PyExecJS)
 │   └── login.py
 ├── README.md
-├── scripts1.py
-├── scripts2.py
+├── admission.py(入校申请)
+├── leave.py(请假申请)
+├── report.py(每日上报)
 └── requirements.txt
 ```
 
