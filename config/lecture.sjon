@@ -1,0 +1,10 @@
+{
+    "Users": [
+        {
+            "id": "user1 id",
+            "whitelist": "健康",
+            "blacklist": "",
+            "location": ""
+        }
+    ]
+}
