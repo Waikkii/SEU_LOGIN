@@ -247,6 +247,8 @@ if __name__ == '__main__':
                 bark_post('请假', msg_all, user["barkkey"])
                 logger.info(user["barkkey"]+"个人推送成功")
             ss.close()
+            logger.info("模拟等待10s......")
+            sleep(10)
     if Total_Bark_Key!="":
         bark_post('请假ALL', msg_all_total, Total_Bark_Key)
         logger.info(Total_Bark_Key+"管理员推送成功")
