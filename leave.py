@@ -7,6 +7,8 @@ import requests
 import datetime
 from urllib import parse
 from tool.login import login
+import time
+from time import sleep
 import logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
