@@ -19,9 +19,9 @@ with open("./config/report.json", "r", encoding="utf-8") as f:
     report_val = json.loads(f.read())
 
 if "ACOUNTS" in os.environ:
-    acounts = os.environ["ACOUNTS"]
+    acounts = json.loads(os.environ["ACOUNTS"])
 if "REPORT" in os.environ:
-    report_val = os.environ["REPORT"]
+    report_val = json.loads(os.environ["REPORT"])
 
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
