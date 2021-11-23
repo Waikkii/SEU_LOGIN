@@ -78,8 +78,8 @@ def lecture(session, whitelist, blacklist, location, msg_all):
         result = session.post(url, data = json_data, verify = False)
         counter = counter + 1
         if counter>=2:
-            logger.info("已超过最大运行次数，未抢到讲座")
-            msg_all += "已超过最大运行次数，未抢到讲座"+"\n"
+            logger.info(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+" 已超过最大运行次数，未抢到讲座")
+            msg_all += time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+" 已超过最大运行次数，未抢到讲座"+"\n"
             break
         logger.info(f'第{counter}次循环。')
         time.sleep(0.5)
