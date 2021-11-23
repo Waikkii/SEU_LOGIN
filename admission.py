@@ -19,9 +19,9 @@ with open("./config/admission.json", "r", encoding="utf-8") as f:
     admission_val = json.loads(f.read())
 
 if "ACOUNTS" in os.environ:
-    acounts = os.environ["ACOUNTS"]
+    acounts = json.loads(os.environ["ACOUNTS"])
 if "ADMISSION" in os.environ:
-    admission_val = os.environ["ADMISSION"]
+    admission_val = json.loads(os.environ["ADMISSION"])
 
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
