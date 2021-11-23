@@ -20,9 +20,9 @@ with open("./config/leave.json", "r", encoding="utf-8") as f:
     leave_val = json.loads(f.read())
 
 if "ACOUNTS" in os.environ:
-    acounts = os.environ["ACOUNTS"]
+    acounts = json.loads(os.environ["ACOUNTS"])
 if "LEAVE" in os.environ:
-    leave_val = os.environ["LEAVE"]
+    leave_val = json.loads(os.environ["LEAVE"])
 
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
