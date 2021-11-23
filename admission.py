@@ -390,7 +390,6 @@ def admission(sess, id, user_info):
     # startFlow
     startFlow_response = sess.post(startFlow, startFlow_data)
     logger.info(startFlow_response.text)
-    msg_all += startFlow_response.text+"\n"
     if "true" in startFlow_response.text:
         logger.info("入校申请成功")
         msg_all += "入校申请成功"+"\n"
