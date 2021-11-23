@@ -107,19 +107,19 @@ def lecture(session, whitelist, blacklist, location, msg_all):
                     location_flag=True
 
                 time_flag=item['YYKSSJ'].split(" ")[0]==time.strftime("%Y-%m-%d", time.localtime())
-
-                if counter==1 and choose_flag and location_flag and time_flag:
-                    logger.info("可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD']))
-                    msg_all += "可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
-                    
                 
                 if choose_flag and location_flag and time_flag:
+                    if counter==1:
+                        logger.info("可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD']))
+                        msg_all += "可抢讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
                     wid = item['WID']
                     url = f'http://ehall.seu.edu.cn/gsapp/sys/jzxxtjapp/hdyy/yySave.do?paramJson=%7B%22HD_WID%22%3A%22{wid}%22%7D'
                     result = session.get(url, verify = False)
                     success = json.loads(result.content.decode())['success']
                     if success == True:
-                        msg_all += "讲座预订成功！讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
+                        success_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                        logger.info(success_time+" 讲座预订成功！讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD']))
+                        msg_all += success_time+" 讲座预订成功！讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
                         continued = False
                         break
         except Exception as e:
