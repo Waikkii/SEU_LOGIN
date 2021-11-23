@@ -119,11 +119,7 @@ def lecture(session, whitelist, blacklist, location, msg_all):
                     result = session.get(url, verify = False)
                     success = json.loads(result.content.decode())['success']
                     if success == True:
-                        msg_all += '讲座预订成功，信息如下：\n' + \
-                            f'讲座名称：{item["JZMC"]}\n' + \
-                            f'讲座时间：{item["JZSJ"]}\n' + \
-                            f'讲座地点：{item["JZDD"]}\n' + \
-                            f'主讲人：{item["ZJR"]}'
+                        msg_all += "讲座预订成功！讲座名："+str(item['JZMC'])+"，讲座日期："+str(item['JZSJ'])+"，讲座地点："+str(item['JZDD'])+"\n"
                         continued = False
                         break
         except Exception as e:
