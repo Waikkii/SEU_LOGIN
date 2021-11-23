@@ -17,9 +17,9 @@ with open("./config/lecture.json", "r", encoding="utf-8") as f:
     lecture_val = json.loads(f.read())
 
 if "ACOUNTS" in os.environ:
-    acounts = os.environ["ACOUNTS"]
+    acounts = json.loads(os.environ["ACOUNTS"])
 if "LECTURE" in os.environ:
-    lecture_val = os.environ["LECTURE"]
+    lecture_val = json.loads(os.environ["LECTURE"])
 
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
