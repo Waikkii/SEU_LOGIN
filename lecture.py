@@ -17,9 +17,9 @@ with open("./config/lecture.json", "r", encoding="utf-8") as f:
     lecture_val = json.loads(f.read())
 
 if "ACOUNTS" in os.environ:
-    acounts = json.loads(os.environ["ACOUNTS"])
+    acounts = os.environ["ACOUNTS"]
 if "LECTURE" in os.environ:
-    lecture_val = json.loads(os.environ["LECTURE"])
+    lecture_val = os.environ["LECTURE"]
 
 Total_Bark_Key = acounts['Total_Bark_Key']
 user_acounts_list = acounts['Users']
@@ -45,16 +45,19 @@ def sbsplit(str):
     else:
         return [str]
 
-def lecture(session, whitelist, blacklist, location, msg_all):
-    if whitelist!="":
-        logger.info("指定白名单过滤："+str(sbsplit(whitelist)))
-        msg_all += "指定白名单过滤："+"\n"
+def lecture(session, pointitem, whitelist, blacklist, location, msg_all):
+    if pointitem!="":
+        logger.info("指定名称过滤："+str(sbsplit(pointitem)))
+        msg_all += "指定名称过滤："+"\n"
+    elif whitelist!="":
+        logger.info("类型指定白名单过滤："+str(sbsplit(whitelist)))
+        msg_all += "类型指定白名单过滤："+"\n"
     elif blacklist!="":
-        logger.info("未找到指定白名单，开启黑名单过滤模式："+str(sbsplit(blacklist)))
-        msg_all += "未找到指定白名单，开启黑名单过滤模式："+str(sbsplit(blacklist))+"\n"
+        logger.info("未找到类型指定白名单，开启黑名单过滤模式："+str(sbsplit(blacklist)))
+        msg_all += "未找到类型指定白名单，开启黑名单过滤模式："+str(sbsplit(blacklist))+"\n"
     else:
-        logger.info("未找到指定白名单和黑名单，不进行过滤")
-        msg_all += "未找到指定白名单和黑名单，不进行过滤"+"\n"
+        logger.info("未找到类型指定白名单和黑名单，不进行过滤")
+        msg_all += "未找到类型指定白名单和黑名单，不进行过滤"+"\n"
 
     if location!="":
         logger.info("指定地点为"+str(sbsplit(location)))
@@ -77,20 +80,23 @@ def lecture(session, whitelist, blacklist, location, msg_all):
         json_data = json.dumps(form_data)
         result = session.post(url, data = json_data, verify = False)
         counter = counter + 1
-        if counter>=2:
+        if counter>=5:
             logger.info(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+" 已超过最大运行次数，未抢到讲座")
             msg_all += time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+" 已超过最大运行次数，未抢到讲座"+"\n"
             break
         logger.info(f'第{counter}次循环。')
-        time.sleep(0.5)
+        time.sleep(2)
         try:
             lecture_list = json.loads(result.content.decode())['datas']['hdxxxs']['rows']
             for item in lecture_list:
                 lecture_type = item['JZXL_DISPLAY']
+                lecture_name = item['JZMC']
                 lecture_place = item['JZDD']
                 lecture_signal = item['YYRS']
 
-                if whitelist!="":
+                if pointitem!="":
+                    choose_flag = lecture_name in sbsplit(pointitem)
+                elif whitelist!="":
                     choose_flag = lecture_type[-2:] in sbsplit(whitelist)
                 elif blacklist!="":
                     choose_flag = lecture_type[-2:] not in sbsplit(blacklist)
@@ -145,7 +151,7 @@ def gevent_do(user):
     if is_login:
         logger.info("SEU登录成功")
         msg_all += "SEU登录成功"+"\n"
-        msg_out = lecture(ss, user["whitelist"], user["blacklist"], user["location"], msg_all)
+        msg_out = lecture(ss, user["pointitem"], user["whitelist"], user["blacklist"], user["location"], msg_all)
         bark_post('讲座', msg_out, Total_Bark_Key)
         bark_post('讲座', msg_out, barkkey)
     else:
