@@ -2,6 +2,7 @@
     "Users": [
         {
             "id": "user1 id",
+            "pointitem": "",
             "whitelist": "健康",
             "blacklist": "",
             "location": ""
